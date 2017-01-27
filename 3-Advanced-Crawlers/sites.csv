@@ -1,0 +1,4 @@
+name,url,searchUrl,resultListingClass,resultUrl,absoluteUrl,pageTitle,
+Reuters,http://reuters.com,http://www.reuters.com/search/news?blob=,div.search-result-content,h3.search-result-title a,FALSE,h1
+Brookings,http://www.brookings.edu,https://www.brookings.edu/search/?s=,div.list-content article,h4.title a,TRUE,h1
+Goodreads,https://www.goodreads.com,https://www.goodreads.com/search?utf8=%E2%9C%93&search_type=books&q=,div bookTitle,a.bookTitle a,TRUE,h1

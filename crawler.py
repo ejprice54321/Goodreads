@@ -50,5 +50,8 @@ class Crawler:
             cols = tr.findAll('td')
             site.url = cols[1].find("a").get('href')
             pageObj = self.getPage(site.url+url)
-            title = self.safeGet(pageObj, site.pageTitle)
-            
+            if pageObj == None:
+            	print("something was wrong with that page or URL. Skipping!")
+            else:
+            	title = self.safeGet(pageObj, site.pageTitle)
+            	print("title is " + title)

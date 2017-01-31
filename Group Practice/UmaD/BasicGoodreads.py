@@ -8,6 +8,12 @@ from bs4 import BeautifulSoup
 from urllib.error import HTTPError
 from urllib.error import URLError
 
+class Book:
+    def __init__(self, title, author, url):
+        self.title = title
+        self.author = author
+        self.url = url
+
 def crawlBookList(url):
     for i in range(0, 5):
         try:
@@ -20,7 +26,14 @@ def crawlBookList(url):
             print("Scraping page: "+str(i)+" of Best Series book list")
             bsObj = BeautifulSoup(html, "html.parser")
             genreList = bsObj.findAll("span", {"itemprop":"name"})
-            for genre in genreList:
+            for title in genreList[::2]:
+                book = Book()
                 print(genre.get_text())
+
+            for author in genreList[1::2]:
+                print(author.get_text())
+
+
+
 
 crawlBookList("https://www.goodreads.com/list/show/1381.Best_Series?page=")

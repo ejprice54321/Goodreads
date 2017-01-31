@@ -1,7 +1,7 @@
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 
-html = urlopen("http://www.pythonscraping.com/pages/warandpeace.html")
+html = urlopen("https://www.goodreads.com/search?utf8=%E2%9C%93&query=book")
 bsObj = BeautifulSoup(html, "html.parser")
-allText = bsObj.findAll(id="text")
+allText = bsObj.findAll(span="name")
 print(allText[0].get_text())

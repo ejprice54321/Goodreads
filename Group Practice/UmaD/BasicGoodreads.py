@@ -14,8 +14,35 @@ class Book:
         self.author = author
         self.url = url
 
-def crawlBookList(url):
-    for i in range(0, 5):
+def getTitle(bsObj):
+    fullList = bsObj.findAll("span", {"itemprop":"name"})
+    titleList = []
+    for title in fullList[::2]:
+        titleList.append(title.get_text())
+    return titleList
+
+def getAuthor(bsObj):
+    fullList = bsObj.findAll("span", {"itemprop":"name"})
+    authorList = []
+    for author in fullList[1::2]:
+        authorList.append(author.get_text())
+    return authorList
+
+def getHref(bsobj):
+    table = bsObj.find("table", {"class":"tableList"})
+    book = table.findAll("tr")
+    linkList =[]
+    for tr in book:
+        cols = tr.findAll("td")
+        link = cols[1].find("a").get("href")
+        linkList.append(link)
+    return linkList
+
+
+if __name__ == "__main__":
+    url = "https://www.goodreads.com/list/show/1381.Best_Series?page="
+    bookObjectList = []
+    for i in range(0, 2):
         try:
             html = urlopen(url+str(i))
         except HTTPError as e:
@@ -25,15 +52,10 @@ def crawlBookList(url):
         else:
             print("Scraping page: "+str(i)+" of Best Series book list")
             bsObj = BeautifulSoup(html, "html.parser")
-            genreList = bsObj.findAll("span", {"itemprop":"name"})
-            for title in genreList[::2]:
-                book = Book()
-                print(genre.get_text())
-
-            for author in genreList[1::2]:
-                print(author.get_text())
-
-
-
-
-crawlBookList("https://www.goodreads.com/list/show/1381.Best_Series?page=")
+            authorList = getAuthor(bsObj)
+            titleList = getTitle(bsObj)
+            linkList = getHref(bsObj)
+            for i in range(len(linkList)):
+                book = Book(titleList[i], authorList[i], linkList[i])
+                bookObjectList.append(book)
+                print(bookObjectList[i].url)

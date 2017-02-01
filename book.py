@@ -1,3 +1,6 @@
+##################
+# This class holds a title, author and url link from Goodreads.
+#################
 class Book:
     def __init__(self, title, author, url):
         self.title = title

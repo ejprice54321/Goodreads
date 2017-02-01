@@ -1,18 +1,13 @@
 ##################
-# This crawler gets the url of a popular book list from Goodreads,
-# and prints out the titles and authors from the first 5 pages
+# This crawler scrapes the first n pages of a book list from Goodreads,
+# and stores them as books with titles, authors, and links.
 #################
 
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 from urllib.error import HTTPError
 from urllib.error import URLError
-
-class Book:
-    def __init__(self, title, author, url):
-        self.title = title
-        self.author = author
-        self.url = url
+from book import Book
 
 def getTitle(bsObj):
     fullList = bsObj.findAll("span", {"itemprop":"name"})
@@ -28,7 +23,7 @@ def getAuthor(bsObj):
         authorList.append(author.get_text())
     return authorList
 
-def getHref(bsobj):
+def getLink(bsobj):
     table = bsObj.find("table", {"class":"tableList"})
     book = table.findAll("tr")
     linkList =[]
@@ -54,7 +49,7 @@ if __name__ == "__main__":
             bsObj = BeautifulSoup(html, "html.parser")
             authorList = getAuthor(bsObj)
             titleList = getTitle(bsObj)
-            linkList = getHref(bsObj)
+            linkList = getLink(bsObj)
             for i in range(len(linkList)):
                 book = Book(titleList[i], authorList[i], linkList[i])
                 bookObjectList.append(book)

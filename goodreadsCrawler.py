@@ -12,26 +12,24 @@ from book import Book
 class Crawler:
 
     #########
-    # Grabs the title of each book on the page and stores it in a titleList.
-    # Returns the titleList.
+    # Grabs the title of the book.
     #########
     def getTitle(self, bsObj):
-        fullList = bsObj.findAll("span", {"itemprop":"name"})
-        titleList = []
-        for title in fullList[::2]:
-            titleList.append(title.get_text())
-        return titleList
+        fullList = bsObj.findAll("h1", {"itemprop":"name"})
+        # titleList = []
+        # for title in fullList:
+        #     titleList.append(title.get_text().strip())
+        return fullList
 
     #########
-    # Grabs the author of each book on the page and stores it in an authorList.
-    # Returns the authorList.
+    # Grabs the author of the book.
     #########
     def getAuthor(self, bsObj):
-        fullList = bsObj.findAll("span", {"itemprop":"name"})
-        authorList = []
-        for author in fullList[1::2]:
-            authorList.append(author.get_text())
-        return authorList
+        fullList = bsObj.findAll("authorName", {"itemprop":"name"})
+        # authorList = []
+        # for author in fullList[1::2]:
+        #     authorList.append(author.get_text())
+        return fullList
 
     #########
     # Grabs the url of each book on the page and stores it in a linkList.
@@ -50,16 +48,14 @@ class Crawler:
     #########
     # Prints content of books in the bookObjectList
     #########
-    def printContent(self, bookObjectList):
-        print(bookObjectList[i].bookUrl)
+    def printContent(self, bookList):
+        print(bookList[i].bookUrl)
 
     ################
-    # Starts a search of a given Goodreads book list url for a j# of pages,
-    # creates a list of book objects and stores the info grabbed in each object.
-    # Returns a list of the book objects.
+    # Starts a search of a given url.
+    # Returns its BeautifulSoup object.
     ##############
     def crawl(self, url):
-        bookObjectList = []
         try:
             html = urlopen(url)
         except HTTPError as e:
@@ -67,20 +63,39 @@ class Crawler:
         except URLError as e:
             print("The server could not be found!")
         else:
-            print("Scraping Best Series book list page")
+            print("Scraping new page")
             bsObj = BeautifulSoup(html, "html.parser")
-            authorList = self.getAuthor(bsObj)
-            titleList = self.getTitle(bsObj)
-            linkList = self.getLink(bsObj)
-            for i in range(len(linkList)):
-                book = Book(titleList[i], authorList[i], linkList[i])
-                bookObjectList.append(book)
-            return bookObjectList
+            return bsObj
 
+    ################
+    # Searches a given Goodreads list and records all books, titles, authors, and links.
+    # NOT BEING USED RN
+    ##############
+    def searchList(self, bsObj):
+        bookList = []
+        authorList = self.getAuthor(bsObj)
+        titleList = self.getTitle(bsObj)
+        linkList = self.getLink(bsObj)
+        for i in range(len(linkList)):
+            book = Book(titleList[i], authorList[i], linkList[i])
+            bookList.append(book)
+        return bookList
+
+    ################
+    # Searches a given Goodreads book page and records its description, rating, characters, setting, and awards.
+    ##############
+    def searchBook(self, bsObj):
+        bookList = []
+        titleList = self.getTitle(bsObj)
+        authorList = self.getAuthor(bsObj)
+        print (titleList, authorList)
 
 if __name__ == "__main__":
-    url = "https://www.goodreads.com/list/show/1381.Best_Series?page="
+    url = "https://www.goodreads.com/"
     crawler = Crawler()
-    bookList = crawler.crawl(url)
-    for i in range(len(bookList)):
-        crawler.printContent(bookList)
+    bsObj = crawler.crawl(url + "list/show/1381.Best_Series?page=")
+    linkList = crawler.getLink(bsObj)
+    print(linkList)
+    for i in range(len(linkList)):
+        bsObj = crawler.crawl(url + str(linkList[i]))
+        crawler.searchBook(bsObj)

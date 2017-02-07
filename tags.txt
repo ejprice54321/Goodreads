@@ -1,0 +1,23 @@
+Rating:
+<span class="average" itemprop="ratingValue">4.36</span>
+
+Description:
+<div id="description" class="readable stacked" style="right:0">
+
+Pages:
+<span itemprop="numberOfPages">552</span>
+
+Info:
+<div class="infoBoxRowItem">
+
+Cost:
+<li class="firstBuyButton">
+
+Review URL:
+<div class="updateActionLinks">
+
+Review Text:
+<div class="reviewText mediumText description readable" itemprop="reviewBody">
+
+Review Amt.:
+<span title="liked it" size="15x15" class="staticStar p10">liked it</span>

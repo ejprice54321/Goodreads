@@ -16,9 +16,6 @@ class Crawler:
     #########
     def getTitle(self, bsObj):
         fullList = bsObj.findAll("h1", {"itemprop":"name"})
-        # titleList = []
-        # for title in fullList:
-        #     titleList.append(title.get_text().strip())
         return fullList
 
     #########
@@ -26,9 +23,6 @@ class Crawler:
     #########
     def getAuthor(self, bsObj):
         fullList = bsObj.findAll("authorName", {"itemprop":"name"})
-        # authorList = []
-        # for author in fullList[1::2]:
-        #     authorList.append(author.get_text())
         return fullList
 
     #########

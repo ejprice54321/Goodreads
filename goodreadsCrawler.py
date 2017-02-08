@@ -16,20 +16,28 @@ class Crawler:
     # Grabs the title of the book.
     #########
     def getTitle(self, bsObj):
+<<<<<<< HEAD
         fullList = bsObj.find("h1", {"itemprop":"name"})
         # titleList = []
         # for title in fullList:
         #     titleList.append(title.get_text().strip())
+=======
+        fullList = bsObj.findAll("h1", {"itemprop":"name"})
+>>>>>>> 24ab440541dd2813684a52014a26242ba12bda18
         return fullList
 
     #########
     # Grabs the author of the book.
     #########
     def getAuthor(self, bsObj):
+<<<<<<< HEAD
         fullList = bsObj.findAll("span", {"itemprop":"name"})
         # authorList = []
         # for author in fullList[1::2]:
         #     authorList.append(author.get_text())
+=======
+        fullList = bsObj.findAll("authorName", {"itemprop":"name"})
+>>>>>>> 24ab440541dd2813684a52014a26242ba12bda18
         return fullList
 
     #########

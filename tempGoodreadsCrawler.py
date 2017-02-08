@@ -10,7 +10,7 @@ from urllib.error import URLError
 from book import Book
 import pymysql
 
-class Crawler:	
+class Crawler:
 
     #########
     # Grabs the title of the book.
@@ -26,7 +26,7 @@ class Crawler:
     # Grabs the author of the book.
     #########
     def getAuthor(self, bsObj):
-        fullList = bsObj.findAll("span", {"itemprop":"name"})
+        fullList = bsObj.find("span", {"itemprop":"name"})
         # authorList = []
         # for author in fullList[1::2]:
         #     authorList.append(author.get_text())
@@ -65,8 +65,8 @@ class Crawler:
             print("The server could not be found!")
         else:
             print("Scraping new page")
-            listObj = BeautifulSoup(html, "html.parser")
-            return listObj
+            bsObj = BeautifulSoup(html, "html.parser")
+            return bsObj
 
 
     ################
@@ -76,7 +76,8 @@ class Crawler:
         bookList = []
         titleList = self.getTitle(bsObj)
         authorList = self.getAuthor(bsObj)
-        print (authorList)
+
+        print (titleList)
 
 if __name__ == "__main__":
     url = "https://www.goodreads.com/"

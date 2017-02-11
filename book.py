@@ -23,7 +23,7 @@ class Book:
 
     			if db.cur.rowcount == 0:
     				print("INSERT INTO books (titleId, authorId) VALUES ("+str(self.question.id)+", "+str(self.player.id)+")")
-    				db.cur.execute("INSERT INTO books (titleId, authorId) VALUES (%s, %s)", (int(self.question.id), int(self.player.id))
+    				db.cur.execute("INSERT INTO books (titleId, authorId) VALUES (%s, %s)", (int(self.question.id), int(self.player.id)))
     				db.conn.commit()
     				self.id = db.cur.lastrowid
     			else:

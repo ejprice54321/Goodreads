@@ -5,6 +5,6 @@ class Database:
 
 	def __init__(self):
 		#Assumes port 3306
-		self.conn = pymysql.connect(host='127.0.0.1', unix_socket='/run/mysqld/mysqdl.sock', user='root', passwd='root', db='book', charset='utf8')
+		self.conn = pymysql.connect(user='root', passwd='root', charset='utf8')
 		self.cur = self.conn.cursor(pymysql.cursors.DictCursor)
-		self.cur.execute("USE goodreadsCrawler")
+		self.cur.execute("USE goodreads")

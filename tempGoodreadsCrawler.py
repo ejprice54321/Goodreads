@@ -20,7 +20,7 @@ class Crawler:
         # titleList = []
         # for title in fullList:
         #     titleList.append(title.get_text().strip())
-        return fullList
+        return fullList.get_text()
 
     #########
     # Grabs the author of the book.
@@ -30,8 +30,15 @@ class Crawler:
         # authorList = []
         # for author in fullList[1::2]:
         #     authorList.append(author.get_text())
-        return fullList
+        return fullList.get_text()
 
+    #########
+    # Grabs the description of the book.
+    #########
+    def getDescription(self, bsObj):
+        nameList = bsObj.find("div", {"id":"description"})
+
+        return nameList.get_text()
     #########
     # Grabs the url of each book on the page and stores it in a linkList.
     # Returns the linkList.
@@ -76,8 +83,9 @@ class Crawler:
         bookList = []
         titleList = self.getTitle(bsObj)
         authorList = self.getAuthor(bsObj)
+        descriptionList = self.getDescription(bsObj)
 
-        print (titleList)
+        print (titleList, authorList, descriptionList)
 
 if __name__ == "__main__":
     url = "https://www.goodreads.com/"

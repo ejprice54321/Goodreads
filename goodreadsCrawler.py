@@ -7,6 +7,7 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup
 from urllib.error import HTTPError
 from urllib.error import URLError
+from database import Database
 from book import Book
 import pymysql
 
@@ -73,6 +74,7 @@ class Crawler:
         print (titleList, authorList)
 
 if __name__ == "__main__":
+    db = Database()
     url = "https://www.goodreads.com/"
     crawler = Crawler()
     bsObj = crawler.crawl(url + "list/show/1381.Best_Series?page=")

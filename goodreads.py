@@ -16,21 +16,24 @@ class Goodreads:
     # Grabs the title of the book.
     #########
     def getBook(self, bsObj):
-        book = Book()
-        book.title = (bsObj.find("h1", {"itemprop":"name"})).get_text()
-        book.author = (bsObj.find("span", {"itemprop":"name"})).get_text()
-        book.description = (bsObj.find("div", {"id":"description"})).get_text()
-        book.type = (bsObj.find("span", {"itemprop":"bookFormatType"})).get_text()
-        book.pages = (bsObj.find("span", {"itemprop":"numberOfPages"})).get_text()
+        awards = 0
+         = 0
+        awards = 0
+        title = (bsObj.find("h1", {"itemprop":"name"})).get_text()
+        author = (bsObj.find("span", {"itemprop":"name"})).get_text()
+        description = (bsObj.find("div", {"id":"description"})).get_text()
+        bookType = (bsObj.find("span", {"itemprop":"bookFormatType"})).get_text()
+        pages = (bsObj.find("span", {"itemprop":"numberOfPages"})).get_text()
+        rating = (bsObj.find("span",{"class":"average"})).get_text()
         table = bsObj.find("div", {"id":"bookDataBox"})
-        book.rating = (bsObj.find("span",{"value":"rating"})).get_text()
-        for row in table.findAll("div", {"id":"bookDataBox"}):
+        for row in table.findAll("div", {"class":"clearFloats"}):
             title = (row.find("div", {"class":"infoBoxRowTitle"})).get_text()
             item = (row.find("div", {"class":"infoBoxRowItem"})).get_text()
             if title == "Characters":
-                book.characters = item
+                characters = item
             elif title == "Literary Awards":
-                book.awards = item
+                awards = item
+        book = Book(title, author, description, bookType, pages, rating, characters, awards)
         return book
     #########
     # Grabs the url of each book on the page and stores it in a linkList.
@@ -74,7 +77,7 @@ class Goodreads:
     ##############
     def searchBook(self, bsObj):
         book = self.getBook(bsObj)
-        print (book)
+        print (book.awards)
 
 if __name__ == "__main__":
     url = "https://www.goodreads.com/"

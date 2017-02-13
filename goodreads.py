@@ -10,6 +10,7 @@ from urllib.error import URLError
 from book import Book
 from review import Review
 from author import Author
+from database import Database
 import pymysql
 
 class Goodreads:
@@ -17,7 +18,7 @@ class Goodreads:
     #########
     # Grabs the information from a book.
     #########
-    def getReview(self,bsObj, bookTitle):
+    def getReview(self,bsObj, bookTitle, db):
         book = bookTitle
         reviewer = (bsObj.find("a", {"class":"user"})).get_text()
         content = (bsObj.find("div", {"class":"reviewText stacked"})).get_text()
@@ -31,6 +32,7 @@ class Goodreads:
         except:
             rating = 0
         review = Review(book,reviewer,content,likes,date,rating)
+        # review.save(db)
         return review
 
 
@@ -38,7 +40,7 @@ class Goodreads:
     # Grabs the information related to the author of a book
     # Returns the author object
     #########
-    def getAuthor(self,authorPage):
+    def getAuthor(self,authorPage, db):
         name = authorPage.find('h1').get_text()
         try:
             birth = authorPage.find("div",{"itemprop":"birthDate"}).get_text()
@@ -54,6 +56,7 @@ class Goodreads:
             website = 0
         bio = authorPage.find("div",{"class":"aboutAuthorInfo"}).get_text()
         author = Author(name,birth,death,website,bio)
+
         print(bio)
 
 
@@ -61,7 +64,7 @@ class Goodreads:
     # Grabs the information related to a book
     # Returns the book object
     #########
-    def getBook(self, bsObj):
+    def getBook(self, bsObj, db):
         awards = 0
         characters = 0
         title = (bsObj.find("h1", {"itemprop":"name"})).get_text()
@@ -85,10 +88,11 @@ class Goodreads:
                 awards = item
         reviewTable = bsObj.find("div", {"id":"bookReviews"})
         for row in reviewTable.findAll("div", {"class": "review"}):
-            review = self.getReview(row, title)
-        self.getAuthorLink(bsObj)
-        book = Book(title, author, description, bookType, pages, rating, characters, awards, publication)
-        return book
+            review = self.getReview(row, title, db)
+        self.getAuthorLink(bsObj, db)
+        bookObj = Book(title, author, description, bookType, pages, rating, characters, awards, publication)
+        bookObj.save(db)
+        return bookObj
 
 
     #########
@@ -113,10 +117,10 @@ class Goodreads:
 
 
 
-    def getAuthorLink(self,bsObj):
+    def getAuthorLink(self,bsObj, db):
         authorURL = bsObj.find("a",{"class":"actionLink moreLink"}).get("href")
         authorObject = self.crawl(url + authorURL)
-        author = self.getAuthor(authorObject)
+        author = self.getAuthor(authorObject, db)
 
 
     ################
@@ -139,12 +143,13 @@ class Goodreads:
     ################
     # Searches a given Goodreads book page and records its description, rating, characters, setting, and awards.
     ##############
-    def searchBook(self, bsObj):
-        book = self.getBook(bsObj)
+    def searchBook(self, bsObj,db):
+        book = self.getBook(bsObj,db)
 
 if __name__ == "__main__":
     url = "https://www.goodreads.com/"
     goodreads = Goodreads()
+    db = Database()
     reviewCount = 0
     linkCount = 0
     bookCount = 0
@@ -160,4 +165,4 @@ if __name__ == "__main__":
     books = {};
     for i in range(len(linkList)):
         bsObj = goodreads.crawl(url + str(linkList[i]))
-        goodreads.searchBook(bsObj)
+        goodreads.searchBook(bsObj, db)

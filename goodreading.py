@@ -12,28 +12,29 @@ from book import Book
 import pymysql
 
 class Crawler:
-	# db = None
-	# start = False
-    #
-	# def __init__(self):
-	# 	global db
-	# 	global start
-	# 	db = Database()
-	# 	start = False
+    db = None
+    start = False
+
+    def __init__(self):
+        global db
+        global start
+        db = Database()
+        start = False
 
     #########
     # Grabs the title of the book.
     #########
-    def createBook(self, bsObj):
+    def createBook(self, bsObj, db):
         fullListTitle = bsObj.findAll("h1", {"itemprop":"name"})
         fullListAuthor = bsObj.findAll("span", {"itemprop":"name"})
+        print(fullListTitle)
         books = []
         if len(fullListTitle) != len(fullListAuthor):
             print("NOOO")
             return
         else:
             for i in range (0, len(fullListTitle)):
-                bookObj = Book(None, fullListTitle[i], fullListAuthor[i])
+                bookObj = Book(fullListTitle[i], fullListAuthor[i])
                 bookObj = bookObj.save(db)
                 books.append(bookObj)
 
@@ -78,12 +79,12 @@ class Crawler:
     ################
     # Searches a given Goodreads book page and records its description, rating, characters, setting, and awards.
     ##############
-    def searchBook(self, bsObj):
+    def searchBook(self, bsObj, db):
         bookList = []
         #titleList = self.getTitle(bsObj)
         #authorList = self.getAuthor(bsObj)
         #print (titleList, authorList)
-        bookList = self.createBook(bsObj)
+        bookList = self.createBook(bsObj, db)
         print ("Collected one more")
 
 if __name__ == "__main__":
@@ -97,4 +98,4 @@ if __name__ == "__main__":
     books = {};
     for i in range(len(linkList)):
         bsObj = crawler.crawl(url + str(linkList[i]))
-        crawler.searchBook(bsObj)
+        crawler.searchBook(bsObj, db)

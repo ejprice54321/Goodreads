@@ -1,4 +1,4 @@
--- MySQL dump 2/11/2017
+-- MySQL dump 2/13/2017
 --
 -- Host: localhost    Database: goodreads
 -- ------------------------------------------------------
@@ -6,7 +6,7 @@
 -- Table structure for table `book`
 --
 
-DROP TABLE IF EXISTS `book`;
+DROP TABLE IF EXISTS `books`;
 
 CREATE TABLE `answers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

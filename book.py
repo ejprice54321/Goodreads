@@ -6,7 +6,7 @@ import pymysql
 from pymysql.err import InternalError
 
 class Book:
-    def __init__(self, title, author, bookUrl):
+    def __init__(self, id, title, author, bookUrl):
         self.title = title
         self.author = author
         self.bookUrl = bookUrl

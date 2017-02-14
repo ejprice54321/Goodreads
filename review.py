@@ -14,3 +14,20 @@ class Review:
     	self.likes = likes
     	self.date = date
     	self.rating = rating
+
+
+    def save(self, db):
+
+            add_review = ("INSERT INTO books "
+                        "(book, reviewer, content, likes, date, rating) "
+                        "VALUES (%s, %s, %s, %s, %s, %s)")
+
+            data_review = (self.book, self.reviewer, self.content, self.likes, self.date, self.reviewer)
+
+            #Check to see if book already exists
+
+            #Insert author
+            db.cur.execute(add_review, data_review)
+
+            #commit data to Database
+            db.conn.commit()

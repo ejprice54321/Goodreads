@@ -21,10 +21,10 @@ class Book:
     def save(self, db):
 
             add_book = ("INSERT INTO books "
-                        "(title, author) "
-                        "VALUES (%s, %s)")
+                        "(title, author, description, bookType, pages, rating, characters, awards, publication) "
+                        "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)")
 
-            data_book = (self.title, self.author)
+            data_book = (self.title, self.author, self.description, self.bookType, self.pages, self.rating, self.characters, self.awards, self.publication)
 
             #Check to see if book already EXISTS
             

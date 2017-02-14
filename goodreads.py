@@ -179,8 +179,10 @@ class Goodreads:
             html = urlopen(url)
         except HTTPError as e:
             print(e)
+            return None
         except URLError as e:
             print("The server could not be found!")
+            return None
         else:
             print("Scraping new page")
             bsObj = BeautifulSoup(html, "html.parser")

@@ -19,7 +19,7 @@ Possible ideas include:
 - beautifulSoup
 - pymysql
 - time
-- *Line 7 in database.py should be changes to fit user information
+- *Line 7 in database.py should be changes to fit individual user and password information
 
 ## Object Outline (also the data collected)
 

@@ -18,7 +18,7 @@ class Review:
 
     def save(self, db):
 
-            add_review = ("INSERT INTO books "
+            add_review = ("INSERT INTO reviews "
                         "(book, reviewer, content, likes, date, rating) "
                         "VALUES (%s, %s, %s, %s, %s, %s)")
 

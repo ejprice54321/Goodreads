@@ -12,6 +12,7 @@ from review import Review
 from author import Author
 from database import Database
 import pymysql
+import time
 
 class Goodreads:
 
@@ -21,8 +22,14 @@ class Goodreads:
     #########
     def getReview(self,bsObj, bookTitle, db):
         book = bookTitle
-        reviewer = (bsObj.find("a", {"class":"user"})).get_text()
-        content = (bsObj.find("div", {"class":"reviewText stacked"})).get_text()
+        try:
+            reviewer = (bsObj.find("a", {"class":"user"})).get_text()
+        except:
+            reviewer = "No reviewer"
+        try:
+            content = (bsObj.find("div", {"class":"reviewText stacked"})).get_text()
+        except:
+            content = "No content"
         try:
             likes = (bsObj.find("span", {"class":"likesCount"})).get_text()
         except:
@@ -43,7 +50,14 @@ class Goodreads:
     # Returns the author object.
     #########
     def getAuthor(self, authorPage, db):
-        name = authorPage.find('h1').get_text()
+        try:
+            name = authorPage.find('h1').get_text()
+        except:
+            name = "no name"
+        try:
+            website = authorPage.find("a",{"itemprop":"url"}).get("href")
+        except:
+            website = 0
         try:
             birth = authorPage.find("div",{"itemprop":"birthDate"}).get_text()
         except:
@@ -53,11 +67,10 @@ class Goodreads:
         except:
             death = 0
         try:
-            website = authorPage.find("a",{"itemprop":"url"}).get("href")
+            bio = authorPage.find("div",{"class":"aboutAuthorInfo"}).get_text()
         except:
-            website = 0
-        bio = authorPage.find("div",{"class":"aboutAuthorInfo"}).get_text()
-        authorObj = Author(name,birth,death,website,bio)
+            bio = "No bio"
+        authorObj = Author(name,website,birth,death,bio)
         authorObj.save(db)
         return authorObj
 
@@ -69,8 +82,14 @@ class Goodreads:
     def getBook(self, bsObj, db):
         awards = 0
         characters = 0
-        title = (bsObj.find("h1", {"itemprop":"name"})).get_text()
-        author = (bsObj.find("span", {"itemprop":"name"})).get_text()
+        try:
+            title = (bsObj.find("h1", {"itemprop":"name"})).get_text()
+        except:
+            title = 0
+        try:
+            author = (bsObj.find("span", {"itemprop":"name"})).get_text()
+        except:
+            author = "No author"
         try:
             description = (bsObj.find("div", {"id":"description"})).get_text()
         except:
@@ -78,28 +97,40 @@ class Goodreads:
         try:
             publication = bsObj.find("nobr",{"class":"greyText"}).get_text()
         except:
-            greyText = bsObj.findAll("div",{"class":"row"})
-            publication = greyText[1].get_text()
+            try:
+                greyText = bsObj.findAll("div",{"class":"row"})
+                publication = greyText[1].get_text()
+            except:
+                publication = 0
         try:
             bookType = (bsObj.find("span", {"itemprop":"bookFormatType"})).get_text()
         except:
-            bookType = 0
-        pages = (bsObj.find("span", {"itemprop":"numberOfPages"})).get_text()
+            bookType = "No bookType"
+        try:
+            pages = (bsObj.find("span", {"itemprop":"numberOfPages"})).get_text()
+        except:
+            pages = 0
         try:
             rating = (bsObj.find("span",{"class":"average"})).get_text()
         except:
             rating = 0
-        table = bsObj.find("div", {"id":"bookDataBox"})
-        for row in table.findAll("div", {"class":"clearFloats"}):
-            info = (row.find("div", {"class":"infoBoxRowTitle"})).get_text()
-            item = (row.find("div", {"class":"infoBoxRowItem"})).get_text()
-            if info == "Characters":
-                characters = item
-            elif info == "Literary Awards":
-                awards = item
-        reviewTable = bsObj.find("div", {"id":"bookReviews"})
-        for row in reviewTable.findAll("div", {"class": "review"}):
-            review = self.getReview(row, title, db)
+        try:
+            table = bsObj.find("div", {"id":"bookDataBox"})
+            for row in table.findAll("div", {"class":"clearFloats"}):
+                info = (row.find("div", {"class":"infoBoxRowTitle"})).get_text()
+                item = (row.find("div", {"class":"infoBoxRowItem"})).get_text()
+                if info == "Characters":
+                    characters = item
+                elif info == "Literary Awards":
+                    awards = item
+        except:
+            print("NO INFO TABLE")
+        try:
+            reviewTable = bsObj.find("div", {"id":"bookReviews"})
+            for row in reviewTable.findAll("div", {"class": "review"}):
+                review = self.getReview(row, title, db)
+        except:
+            print("NO REVIEW!!!!!!!!!!")
         self.getAuthorLink(bsObj, db)
         bookObj = Book(title, author, description, bookType, pages, rating, characters, awards, publication)
         bookObj.save(db)
@@ -130,9 +161,13 @@ class Goodreads:
     # Grabs the link to the book author's page.
     #########
     def getAuthorLink(self,bsObj, db):
-        authorURL = bsObj.find("a",{"class":"actionLink moreLink"}).get("href")
-        authorObject = self.crawl(url + authorURL)
-        author = self.getAuthor(authorObject, db)
+        try:
+            authorURL = bsObj.find("a",{"class":"actionLink moreLink"}).get("href")
+            authorObject = self.crawl(url + authorURL)
+            author = self.getAuthor(authorObject, db)
+        except:
+            print("Couldn't find author page!!!!!!")
+
 
 
     ################
@@ -141,11 +176,14 @@ class Goodreads:
     ##############
     def crawl(self, url):
         try:
+            time.sleep(3)
             html = urlopen(url)
         except HTTPError as e:
             print(e)
+            return None
         except URLError as e:
             print("The server could not be found!")
+            return None
         else:
             print("Scraping new page")
             bsObj = BeautifulSoup(html, "html.parser")
@@ -162,7 +200,7 @@ if __name__ == "__main__":
     # bsObj = goodreads.crawl(url + "list/show/1381.Best_Series?page=")
     # linkList = goodreads.getLinks(bsObj)
     fullList = []
-    for i in range(5):
+    for i in range(150):
         bsObj = goodreads.crawl(url + "list/show/264.Books_That_Everyone_Should_Read_At_Least_Once?page=" + str(i))
         linkList = goodreads.getLinks(bsObj, fullList)
     #print(linkList)

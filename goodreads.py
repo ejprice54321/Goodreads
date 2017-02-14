@@ -102,7 +102,7 @@ class Goodreads:
                 greyText = bsObj.findAll("div",{"class":"row"})
                 publication = greyText[1].get_text()
             except:
-                "no publication date"
+                publication = 0
         try:
             bookType = (bsObj.find("span", {"itemprop":"bookFormatType"})).get_text()
         except:
@@ -215,7 +215,7 @@ if __name__ == "__main__":
     # bsObj = goodreads.crawl(url + "list/show/1381.Best_Series?page=")
     # linkList = goodreads.getLinks(bsObj)
     fullList = []
-    for i in range(15):
+    for i in range(170):
         bsObj = goodreads.crawl(url + "list/show/264.Books_That_Everyone_Should_Read_At_Least_Once?page=" + str(i))
         linkList = goodreads.getLinks(bsObj, fullList)
     #print(linkList)

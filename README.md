@@ -24,25 +24,26 @@ Possible ideas include:
 ## Object Outline (also the data collected)
 
 Books
-	Title
-	Description
-	Author
-	Date Published
-	Book Type
-	Pages
-	Rating Average
-	Characters
-	Awards
+- Title
+- Description
+- Author
+- Date Published
+- Book Type
+- Pages
+- Rating Average
+- Characters
+- Awards
+
 Author
-	Name
-	Website
-	Birth
-	Death
-	Biography
+- Name
+- Website
+- Birth
+- Death
+- Biography
 
 Reviews
-	Reviewer Name
-	Likes
-	Date
-	Content
-	Rating
+- Reviewer Name
+- Likes
+- Date
+- Content
+- Rating

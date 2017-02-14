@@ -115,14 +115,17 @@ class Goodreads:
             rating = (bsObj.find("span",{"class":"average"})).get_text()
         except:
             rating = 0
-        table = bsObj.find("div", {"id":"bookDataBox"})
-        for row in table.findAll("div", {"class":"clearFloats"}):
-            info = (row.find("div", {"class":"infoBoxRowTitle"})).get_text()
-            item = (row.find("div", {"class":"infoBoxRowItem"})).get_text()
-            if info == "Characters":
-                characters = item
-            elif info == "Literary Awards":
-                awards = item
+        try:
+            table = bsObj.find("div", {"id":"bookDataBox"})
+            for row in table.findAll("div", {"class":"clearFloats"}):
+                info = (row.find("div", {"class":"infoBoxRowTitle"})).get_text()
+                item = (row.find("div", {"class":"infoBoxRowItem"})).get_text()
+                if info == "Characters":
+                    characters = item
+                elif info == "Literary Awards":
+                    awards = item
+        except:
+            print("NO INFO TABLE")
         try:
             reviewTable = bsObj.find("div", {"id":"bookReviews"})
             for row in reviewTable.findAll("div", {"class": "review"}):
@@ -162,7 +165,7 @@ class Goodreads:
             authorObject = self.crawl(url + authorURL)
             author = self.getAuthor(authorObject, db)
         except:
-            print("Couldn't find page!!!!!!")
+            print("Couldn't find author page!!!!!!")
 
 
 

@@ -16,7 +16,8 @@ import pymysql
 class Goodreads:
 
     #########
-    # Grabs the information from a book.
+    # Grabs the information from a review.
+    # Returns the review object.
     #########
     def getReview(self,bsObj, bookTitle, db):
         book = bookTitle
@@ -38,8 +39,8 @@ class Goodreads:
 
 
     #########
-    # Grabs the information related to the author of a book
-    # Returns the author object
+    # Grabs the information from an author's page.
+    # Returns the author object.
     #########
     def getAuthor(self, authorPage, db):
         name = authorPage.find('h1').get_text()
@@ -60,12 +61,10 @@ class Goodreads:
         authorObj.save(db)
         return authorObj
 
-        #print(bio)
-
 
     #########
-    # Grabs the information related to a book
-    # Returns the book object
+    # Grabs the information from a book's page.
+    # Returns the book object.
     #########
     def getBook(self, bsObj, db):
         awards = 0
@@ -121,13 +120,15 @@ class Goodreads:
         return linkList
 
     #########
-    # Prints content of books in the bookObjectList when called
+    # Prints bookUrl of book[i] in the bookObjectList
     #########
     def printContent(self, bookList):
         print(bookList[i].bookUrl)
 
 
-
+    #########
+    # Grabs the link to the book author's page.
+    #########
     def getAuthorLink(self,bsObj, db):
         authorURL = bsObj.find("a",{"class":"actionLink moreLink"}).get("href")
         authorObject = self.crawl(url + authorURL)
@@ -150,24 +151,6 @@ class Goodreads:
             bsObj = BeautifulSoup(html, "html.parser")
             return bsObj
 
-
-    # ################
-    # # Searches a given Goodreads book page and records its description, rating, characters, setting, and awards.
-    # ##############
-    # def searchBook(self, bsObj,db):
-    #     book = self.getBook(bsObj,db)
-
-    # ################
-    # # Searches a given Goodreads author page and records its description, rating, characters, setting, and awards.
-    # ##############
-    # def searchAuthor(self, bsObj,db):
-    #     book = self.getAuthor(bsObj,db)
-
-    # ################
-    # # Searches a given Goodreads review page and records its description, rating, characters, setting, and awards.
-    # ##############
-    # def searchReview(self, bsObj,db):
-    #     book = self.get(bsObj,db)
 
 if __name__ == "__main__":
     url = "https://www.goodreads.com/"

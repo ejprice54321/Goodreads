@@ -1,5 +1,6 @@
 ##################
-# This class holds a title, author and url link from Goodreads.
+# This class holds a title, author, description, bookType, pages, rating, characters,
+# awards, and publication for each book object from Goodreads.
 #################
 from database import Database
 import pymysql
@@ -26,11 +27,7 @@ class Book:
 
             data_book = (self.title, self.author, self.description, self.bookType, self.pages, self.rating, self.characters, self.awards, self.publication)
 
-            #Check to see if book already exists
-            
-
             #Insert book
             db.cur.execute(add_book, data_book)
-
             #commit data to Database
             db.conn.commit()

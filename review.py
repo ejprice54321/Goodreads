@@ -24,10 +24,7 @@ class Review:
 
             data_review = (self.book, self.reviewer, self.content, self.likes, self.date, self.reviewer)
 
-            #Check to see if book already exists
-
-            #Insert author
+            #Insert review
             db.cur.execute(add_review, data_review)
-
             #commit data to Database
             db.conn.commit()

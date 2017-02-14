@@ -123,9 +123,12 @@ class Goodreads:
                 characters = item
             elif info == "Literary Awards":
                 awards = item
-        reviewTable = bsObj.find("div", {"id":"bookReviews"})
-        for row in reviewTable.findAll("div", {"class": "review"}):
-            review = self.getReview(row, title, db)
+        try:
+            reviewTable = bsObj.find("div", {"id":"bookReviews"})
+            for row in reviewTable.findAll("div", {"class": "review"}):
+                review = self.getReview(row, title, db)
+        except:
+            print("NO REVIEW!!!!!!!!!!")
         self.getAuthorLink(bsObj, db)
         bookObj = Book(title, author, description, bookType, pages, rating, characters, awards, publication)
         bookObj.save(db)

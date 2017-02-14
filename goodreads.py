@@ -1,6 +1,7 @@
 ##################
 # This crawler scrapes the first n pages of a book list from Goodreads,
-# and stores them as books with titles, authors, and links.
+# grabs the links to the books, and from their crawls to the individual
+# book and author pages to save information about each in a MySQL database.
 #################
 
 from urllib.request import urlopen
@@ -197,13 +198,10 @@ if __name__ == "__main__":
     reviewCount = 0
     linkCount = 0
     bookCount = 0
-    # bsObj = goodreads.crawl(url + "list/show/1381.Best_Series?page=")
-    # linkList = goodreads.getLinks(bsObj)
     fullList = []
     for i in range(150):
         bsObj = goodreads.crawl(url + "list/show/264.Books_That_Everyone_Should_Read_At_Least_Once?page=" + str(i))
         linkList = goodreads.getLinks(bsObj, fullList)
-    #print(linkList)
     books = {};
     for i in range(len(linkList)):
         bsObj = goodreads.crawl(url + str(linkList[i]))

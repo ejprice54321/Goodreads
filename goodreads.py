@@ -175,7 +175,7 @@ class Goodreads:
     ##############
     def crawl(self, url):
         try:
-            #time.sleep(1)
+            time.sleep(3)
             html = urlopen(url)
         except HTTPError as e:
             print(e)

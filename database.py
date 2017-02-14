@@ -10,4 +10,3 @@ class Database:
 		#self.cur = self.conn.cursor(pymysql.cursors.DictCursor)
 		self.cur = self.conn.cursor()
 		self.cur.execute("USE goodreads")
-		

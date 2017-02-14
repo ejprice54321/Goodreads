@@ -57,7 +57,7 @@ class Goodreads:
         bio = authorPage.find("div",{"class":"aboutAuthorInfo"}).get_text()
         author = Author(name,birth,death,website,bio)
 
-        print(bio)
+        #print(bio)
 
 
     #########
@@ -161,7 +161,7 @@ if __name__ == "__main__":
         linkList = goodreads.getLinks(bsObj)
         for link in range(len(linkList)):
             fullList.append(link)
-    print(linkList)
+    #print(linkList)
     books = {};
     for i in range(len(linkList)):
         bsObj = goodreads.crawl(url + str(linkList[i]))

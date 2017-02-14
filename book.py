@@ -20,12 +20,14 @@ class Book:
 
     def save(self, db):
 
-            
             add_book = ("INSERT INTO books "
                         "(title, author) "
                         "VALUES (%s, %s)")
 
             data_book = (self.title, self.author)
+
+            #Check to see if book already EXISTS
+            
 
             #Insert book
             db.cur.execute(add_book, data_book)

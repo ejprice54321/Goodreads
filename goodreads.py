@@ -217,7 +217,7 @@ if __name__ == "__main__":
     # bsObj = goodreads.crawl(url + "list/show/1381.Best_Series?page=")
     # linkList = goodreads.getLinks(bsObj)
     fullList = []
-    for i in range(170):
+    for i in range(150):
         bsObj = goodreads.crawl(url + "list/show/264.Books_That_Everyone_Should_Read_At_Least_Once?page=" + str(i))
         linkList = goodreads.getLinks(bsObj, fullList)
     #print(linkList)

@@ -16,6 +16,7 @@ class Author:
 
     def save(self, db):
 
+
             add_author = ("INSERT INTO books "
                         "(name, website, birth, death, bio) "
                         "VALUES (%s, %s, %s, %s, %s)")
@@ -23,9 +24,10 @@ class Author:
             data_author = (self.name, self.website, self.birth, self.death, self.bio)
 
             #Check to see if book already exists
+            db.cur.execute("SELECT * FROM authors WHERE name = %s", (int(self.name)))
+			if db.cur.rowcount == 0:
+            	#Insert author
+            	db.cur.execute(add_author, data_author)
 
-            #Insert author
-            db.cur.execute(add_author, data_author)
-
-            #commit data to Database
-            db.conn.commit()
+            	#commit data to Database
+            	db.conn.commit()

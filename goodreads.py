@@ -157,6 +157,17 @@ class Goodreads:
     # def searchBook(self, bsObj,db):
     #     book = self.getBook(bsObj,db)
 
+    # ################
+    # # Searches a given Goodreads author page and records its description, rating, characters, setting, and awards.
+    # ##############
+    # def searchAuthor(self, bsObj,db):
+    #     book = self.getAuthor(bsObj,db)
+
+    # ################
+    # # Searches a given Goodreads review page and records its description, rating, characters, setting, and awards.
+    # ##############
+    # def searchReview(self, bsObj,db):
+    #     book = self.get(bsObj,db)
 
 if __name__ == "__main__":
     url = "https://www.goodreads.com/"

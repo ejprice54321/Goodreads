@@ -26,7 +26,7 @@ class Book:
 
             data_book = (self.title, self.author, self.description, self.bookType, self.pages, self.rating, self.characters, self.awards, self.publication)
 
-            #Check to see if book already EXISTS
+            #Check to see if book already exists
             
 
             #Insert book

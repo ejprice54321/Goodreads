@@ -32,7 +32,8 @@ class Goodreads:
         except:
             rating = 0
         review = Review(book,reviewer,content,likes,date,rating)
-        # review.save(db)
+
+        review.save(db)
         return review
 
 
@@ -55,7 +56,9 @@ class Goodreads:
         except:
             website = 0
         bio = authorPage.find("div",{"class":"aboutAuthorInfo"}).get_text()
-        author = Author(name,birth,death,website,bio)
+        authorObj = Author(name,birth,death,website,bio)
+        authorObj.save(db)
+        return authorObj
 
         #print(bio)
 
@@ -69,15 +72,24 @@ class Goodreads:
         characters = 0
         title = (bsObj.find("h1", {"itemprop":"name"})).get_text()
         author = (bsObj.find("span", {"itemprop":"name"})).get_text()
-        description = (bsObj.find("div", {"id":"description"})).get_text()
+        try:
+            description = (bsObj.find("div", {"id":"description"})).get_text()
+        except:
+            description = 0
         try:
             publication = bsObj.find("nobr",{"class":"greyText"}).get_text()
         except:
             greyText = bsObj.findAll("div",{"class":"row"})
             publication = greyText[1].get_text()
-        bookType = (bsObj.find("span", {"itemprop":"bookFormatType"})).get_text()
+        try:
+            bookType = (bsObj.find("span", {"itemprop":"bookFormatType"})).get_text()
+        except:
+            bookType = 0
         pages = (bsObj.find("span", {"itemprop":"numberOfPages"})).get_text()
-        rating = (bsObj.find("span",{"class":"average"})).get_text()
+        try:
+            rating = (bsObj.find("span",{"class":"average"})).get_text()
+        except:
+            rating = 0
         table = bsObj.find("div", {"id":"bookDataBox"})
         for row in table.findAll("div", {"class":"clearFloats"}):
             info = (row.find("div", {"class":"infoBoxRowTitle"})).get_text()
@@ -99,10 +111,9 @@ class Goodreads:
     # Grabs the url of each book on the page and stores it in a linkList.
     # Returns the linkList.
     #########
-    def getLinks(self, bsObj):
+    def getLinks(self, bsObj, linkList):
         table = bsObj.find("table", {"class":"tableList"})
         book = table.findAll("tr")
-        linkList =[]
         for tr in book:
             cols = tr.findAll("td")
             link = cols[1].find("a").get("href")
@@ -158,9 +169,7 @@ if __name__ == "__main__":
     fullList = []
     for i in range(5):
         bsObj = goodreads.crawl(url + "list/show/264.Books_That_Everyone_Should_Read_At_Least_Once?page=" + str(i))
-        linkList = goodreads.getLinks(bsObj)
-        for link in range(len(linkList)):
-            fullList.append(link)
+        linkList = goodreads.getLinks(bsObj, fullList)
     #print(linkList)
     books = {};
     for i in range(len(linkList)):

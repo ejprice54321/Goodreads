@@ -41,7 +41,7 @@ class Goodreads:
     # Grabs the information related to the author of a book
     # Returns the author object
     #########
-    def getAuthor(self,authorPage, db):
+    def getAuthor(self, authorPage, db):
         name = authorPage.find('h1').get_text()
         try:
             birth = authorPage.find("div",{"itemprop":"birthDate"}).get_text()
@@ -151,11 +151,12 @@ class Goodreads:
             return bsObj
 
 
-    ################
-    # Searches a given Goodreads book page and records its description, rating, characters, setting, and awards.
-    ##############
-    def searchBook(self, bsObj,db):
-        book = self.getBook(bsObj,db)
+    # ################
+    # # Searches a given Goodreads book page and records its description, rating, characters, setting, and awards.
+    # ##############
+    # def searchBook(self, bsObj,db):
+    #     book = self.getBook(bsObj,db)
+
 
 if __name__ == "__main__":
     url = "https://www.goodreads.com/"
@@ -174,4 +175,4 @@ if __name__ == "__main__":
     books = {};
     for i in range(len(linkList)):
         bsObj = goodreads.crawl(url + str(linkList[i]))
-        goodreads.searchBook(bsObj, db)
+        goodreads.getBook(bsObj, db)

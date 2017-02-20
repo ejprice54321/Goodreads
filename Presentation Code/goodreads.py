@@ -11,11 +11,9 @@ from urllib.error import URLError
 from book import Book
 from review import Review
 from author import Author
-from database import Database
+# from database import Database
 import pymysql
 import time
-import requests
-import re
 
 class Goodreads:
 
@@ -23,18 +21,18 @@ class Goodreads:
     # Grabs the information from a review.
     # Returns the review object.
     #########
-    def getReview(self,bsObj, bookTitle, url, db):
+    def getReview(self,bsObj, bookTitle):
         book = bookTitle
         try:
             reviewer = (bsObj.find("a", {"class":"user"})).get_text()
         except:
             reviewer = "No reviewer"
         try:
-            content = (bsObj.find("div", {"class":"reviewText stacked"})).get_text().strip()
+            content = (bsObj.find("div", {"class":"reviewText stacked"})).get_text()
         except:
             content = "No content"
         try:
-            likes = int((bsObj.find("span", {"class":"likesCount"})).get_text().replace(' likes', ''))
+            likes = (bsObj.find("span", {"class":"likesCount"})).get_text()
         except:
             likes = 0
         date = (bsObj.find("a", {"class":"reviewDate createdAt right"})).get_text()
@@ -42,8 +40,8 @@ class Goodreads:
             rating = (bsObj.find("span", {"size":"15x15"})).get_text()
         except:
             rating = 0
-        review = Review(url,book,reviewer,content,likes,date,rating)
-
+        review = Review(book,reviewer,content,likes,date,rating)
+        print(review.reviewer)
         # review.save(db)
         return review
 
@@ -52,7 +50,7 @@ class Goodreads:
     # Grabs the information from an author's page.
     # Returns the author object.
     #########
-    def getAuthor(self, authorPage, url, db):
+    def getAuthor(self, authorPage):
         try:
             name = authorPage.find('h1').get_text()
         except:
@@ -70,13 +68,12 @@ class Goodreads:
         except:
             death = 0
         try:
-            bioFull = authorPage.find("div",{"class":"aboutAuthorInfo"}).get_text()
-            bio = bioFull.replace('edit data', '').replace('...more', '').strip()
+            bio = authorPage.find("div",{"class":"aboutAuthorInfo"}).get_text()
         except:
             bio = "No bio"
-        authorObj = Author(url,name,website,birth,death,bio)
+        authorObj = Author(name,website,birth,death,bio)
+        print(authorObj.name)
         # authorObj.save(db)
-        # print(authorObj.bio)
         return authorObj
 
 
@@ -84,7 +81,7 @@ class Goodreads:
     # Grabs the information from a book's page.
     # Returns the book object.
     #########
-    def getBook(self, bsObj, url, db):
+    def getBook(self, bsObj):
         awards = 0
         characters = 0
         try:
@@ -108,13 +105,15 @@ class Goodreads:
             except:
                 publication = 0
         try:
-            pageString = (bsObj.find("span", {"itemprop":"numberOfPages"})).get_text()
-            pages = int(pageString.strip(' pages'))        
+            bookType = (bsObj.find("span", {"itemprop":"bookFormatType"})).get_text()
+        except:
+            bookType = "No bookType"
+        try:
+            pages = (bsObj.find("span", {"itemprop":"numberOfPages"})).get_text()
         except:
             pages = 0
         try:
-            ratingString = (bsObj.find("span",{"class":"average"})).get_text()
-            rating = int(ratingString)
+            rating = (bsObj.find("span",{"class":"average"})).get_text()
         except:
             rating = 0
         try:
@@ -131,13 +130,13 @@ class Goodreads:
         try:
             reviewTable = bsObj.find("div", {"id":"bookReviews"})
             for row in reviewTable.findAll("div", {"class": "review"}):
-                review = self.getReview(row, title, url, db)
+                review = self.getReview(row, title)
         except:
             print("NO REVIEW!!!!!!!!!!")
-        self.getAuthorLink(bsObj, db)
-        bookObj = Book(url, title, author, description, pages, rating, characters, awards, publication)
+        self.getAuthorLink(bsObj)
+        bookObj = Book(title, author, description, bookType, pages, rating, characters, awards, publication)
         # bookObj.save(db)
-        # print(bookObj.url)
+        print(bookObj.title)
         return bookObj
 
 
@@ -164,11 +163,11 @@ class Goodreads:
     #########
     # Grabs the link to the book author's page.
     #########
-    def getAuthorLink(self,bsObj, db):
+    def getAuthorLink(self,bsObj):
         try:
             authorURL = bsObj.find("a",{"class":"actionLink moreLink"}).get("href")
             authorObject = self.crawl(url + authorURL)
-            author = self.getAuthor(authorObject[0], authorObject[1], db)
+            author = self.getAuthor(authorObject)
         except:
             print("Couldn't find author page!!!!!!")
 
@@ -179,42 +178,33 @@ class Goodreads:
     # Returns its BeautifulSoup object.
     ##############
     def crawl(self, url):
-        # try:
-        #     time.sleep(3)
-        #     html = urlopen(url)
-        # except HTTPError as e:
-        #     print(e)
-        #     return None
-        # except URLError as e:
-        #     print("The server could not be found!")
-        #     return None
-        # else:
-        #     print("Scraping new page")
-        #     bsObj = BeautifulSoup(html, "html.parser")
-        #     return (bsObj,url)
-        session = requests.Session()
-        headers = {"User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36", "Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"}
         try:
-            r = session.get(url, headers = headers)
-        except requests.exceptions.RequestException:
+            time.sleep(3)
+            html = urlopen(url)
+        except HTTPError as e:
+            print(e)
             return None
-        bsObj = BeautifulSoup(r.text, "lxml")
-        return (bsObj, url)
-
+        except URLError as e:
+            print("The server could not be found!")
+            return None
+        else:
+            print("Scraping new page")
+            bsObj = BeautifulSoup(html, "html.parser")
+            return bsObj
 
 
 if __name__ == "__main__":
     url = "https://www.goodreads.com/"
     goodreads = Goodreads()
-    db = Database()
+    # db = Database()
     reviewCount = 0
     linkCount = 0
     bookCount = 0
     fullList = []
     for i in range(1):
         bsObj = goodreads.crawl(url + "list/show/264.Books_That_Everyone_Should_Read_At_Least_Once?page=" + str(i))
-        linkList = goodreads.getLinks(bsObj[0], fullList)
+        linkList = goodreads.getLinks(bsObj, fullList)
     books = {};
-    for i in range(len(linkList[0:5])):
+    for i in range(len(linkList)):
         bsObj = goodreads.crawl(url + str(linkList[i]))
-        goodreads.getBook(bsObj[0], bsObj[1], db)
+        goodreads.getBook(bsObj)

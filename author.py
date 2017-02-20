@@ -6,20 +6,21 @@ import pymysql
 from pymysql.err import InternalError
 
 class Author:
-    def __init__(self, name, website, birth, death,bio):
-    	self.name = name
-    	self.website = website
-    	self.birth = birth
-    	self.death = death
-    	self.bio = bio
+    def __init__(self, url, name, website, birth, death,bio):
+        self.url = url
+        self.name = name
+        self.website = website
+        self.birth = birth
+        self.death = death
+        self.bio = bio
 
     def save(self, db):
 
-        add_author = ("INSERT INTO authors "
-                        "(name, website, birth, death, bio) "
-                        "VALUES (%s, %s, %s, %s, %s)")
+        add_author = ("INSERT INTO author "
+                        "(url, name, website, birth, death, bio) "
+                        "VALUES (%s, %s, %s, %s, %s, %s)")
     
-        data_author = (self.name, self.website, self.birth, self.death, self.bio)
+        data_author = (self.url, self.name, self.website, self.birth, self.death, self.bio)
 
         #Insert author
         db.cur.execute(add_author, data_author)

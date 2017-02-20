@@ -8,11 +8,11 @@ from pymysql.err import InternalError
 
 class Book:
 
-    def __init__(self, title, author, description, bookType, pages = 0, rating = 0, characters = 0, awards = 0, publication = 0):
+    def __init__(self, url, title, author, description, pages, rating, characters, awards, publication):
+        self.url = url
         self.title = title
         self.author = author
         self.description = description
-        self.bookType = bookType
         self.pages = pages
         self.rating = rating
         self.characters = characters
@@ -21,11 +21,11 @@ class Book:
 
     def save(self, db):
 
-            add_book = ("INSERT INTO books "
-                        "(title, author, description, bookType, pages, rating, characters, awards, publication) "
-                        "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)")
+            add_book = ("INSERT INTO book "
+                        "(url, title, author, description, pages, rating, characters, awards, publication) "
+                        "VALUES (%s, %s, %s, %s, %i, %i, %s, %s, %s)")
 
-            data_book = (self.title, self.author, self.description, self.bookType, self.pages, self.rating, self.characters, self.awards, self.publication)
+            data_book = (self.url, self.title, self.author, self.description, self.pages, self.rating, self.characters, self.awards, self.publication)
 
             #Insert book
             db.cur.execute(add_book, data_book)

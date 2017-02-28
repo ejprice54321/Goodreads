@@ -21,7 +21,7 @@ class Goodreads:
 
     #########
     # Grabs the information from a review.
-    # Returns the review object.
+    # Returns the reviews object
     #########
     def getReview(self,bsObj, bookTitle, url, db):
         book = bookTitle

@@ -1,6 +1,7 @@
 ##################
 # This class holds a title, author, description, bookType, pages, rating, characters,
 # awards, and publication for each book object from Goodreads.
+# still works as intended
 #################
 from database import Database
 import pymysql

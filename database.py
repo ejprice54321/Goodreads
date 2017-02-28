@@ -1,3 +1,5 @@
+#creates database object
+
 import pymysql
 from pymysql.err import InternalError
 

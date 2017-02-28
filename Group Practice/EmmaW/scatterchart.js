@@ -1,4 +1,4 @@
-var data = [[5,8], [10,17], [15,4], [2,8]];
+var data = [[5,13], [10,17], [15,4], [2,8]];
 
     var margin = {top: 20, right: 15, bottom: 60, left: 60}
       , width = 960 - margin.left - margin.right
@@ -28,6 +28,13 @@ var data = [[5,8], [10,17], [15,4], [2,8]];
     var xAxis = d3.svg.axis()
 	.scale(x)
 	.orient('bottom');
+
+  // svg.append("text")      // text label for the x axis
+  //     .attr("class", "x label")
+  //     .attr("x", 265 )
+  //     .attr("y",  240 )
+  //     .style("text-anchor", "middle")
+  //     .text("Rating");
 
     main.append('g')
 	.attr('transform', 'translate(0,' + height + ')')

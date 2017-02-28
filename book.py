@@ -23,7 +23,7 @@ class Book:
 
             add_book = ("INSERT INTO book "
                         "(url, title, author, description, pages, rating, characters, awards, publication) "
-                        "VALUES (%s, %s, %s, %s, %i, %i, %s, %s, %s)")
+                        "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)")
 
             data_book = (self.url, self.title, self.author, self.description, self.pages, self.rating, self.characters, self.awards, self.publication)
 

@@ -43,8 +43,7 @@ class Goodreads:
         except:
             rating = 0
         review = Review(url,book,reviewer,content,likes,date,rating)
-
-        # review.save(db)
+        review.save(db)
         return review
 
 
@@ -75,7 +74,7 @@ class Goodreads:
         except:
             bio = "No bio"
         authorObj = Author(url,name,website,birth,death,bio)
-        # authorObj.save(db)
+        authorObj.save(db)
         # print(authorObj.bio)
         return authorObj
 
@@ -109,7 +108,7 @@ class Goodreads:
                 publication = 0
         try:
             pageString = (bsObj.find("span", {"itemprop":"numberOfPages"})).get_text()
-            pages = int(pageString.strip(' pages'))        
+            pages = int(pageString.strip(' pages'))
         except:
             pages = 0
         try:
@@ -136,7 +135,7 @@ class Goodreads:
             print("NO REVIEW!!!!!!!!!!")
         self.getAuthorLink(bsObj, db)
         bookObj = Book(url, title, author, description, pages, rating, characters, awards, publication)
-        # bookObj.save(db)
+        bookObj.save(db)
         # print(bookObj.url)
         return bookObj
 

@@ -17,21 +17,26 @@
 d3.select("#chart")
         //Yes, you're selecting the circles before you create them
         .selectAll("circle")
-        .data([50, 15, 20, 25])
+        .data([10, 15])
         .enter()
+
         //Circle is the svg shape you're appending to the chart
         .append("circle")
+
         //y distance from top
         .attr("cy", "40")
+
         //x distance from left
-        .attr("cx", function (d, i) {return i*100;})
+        .attr("cx", function (d, i) {return (i+1)*100;})
+
          //Radius
-        .attr("r", function(d){
-                return d
-            })
+        .attr("r", "10")
+        // function(d){
+            //     return d
+            // })
         .style("fill", "red")
         .style("stroke", "black")
-        .style("stroke-width", function(d, i){return i});
+        .style("stroke-width", ".5");
 </script>
 
 </body>

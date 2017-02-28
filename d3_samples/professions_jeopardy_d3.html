@@ -1,0 +1,78 @@
+<html>
+  <head>
+    <title>My First SVG Path using D3</title>
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+  </head>
+  <body>
+    <svg width="500" height="1000" id="fun-drawing-area" style="background: #EEE">
+    </svg>
+  </body>
+  
+  <script type="text/javascript">  
+    
+    var professions = ["engineer","lawyer","doctor","scientist","teacher","professor"];
+    var colors = ["orange", "red", "blue","green","yellow","brown"];
+    var axisDrawn = false;
+    self = this;
+    $.each(professions, function(i, profession){
+        console.log("Calling "+"http://localhost:5000/money?limit=40&profession="+profession);
+        $.ajax({
+            url: "http://localhost:5000/money?limit=40&profession="+profession,
+            color: colors[i],
+            success: function(result){
+                    var fda = draw($.parseJSON(result), this.color);
+                    if(!axisDrawn) {
+                        axisDrawn = true;
+                        drawAxis(fda);
+                    }
+            }
+        });
+    });
+
+    var leftMargin = 60;
+    var height = 800;
+    var width = 1000 - leftMargin;
+    var points = 40;
+
+    var largest = 2300000;
+    
+    var generator = d3.line()
+        .x(function(d, i){
+            return i*(width/points)+leftMargin;
+        }).y(function(d){
+            return height - d["money"]/(largest/height);
+        })
+        //Interpolation used
+        .curve(d3.curveBasis);
+
+    function draw(data, color) {
+        console.log(data);
+        console.log("Color is: "+color);
+
+        var fda = d3.select("#fun-drawing-area");
+        var lineGraph = fda.append("path")
+            .attr("d", generator(data))
+            .attr("stroke", color)
+            .attr("stroke-width", 2)
+            .attr("fill-opacity",0);
+        return fda;
+    }
+
+    function drawAxis(fda) {
+        //This is similar to the d3.scaleLinear used in the color example
+        var yScale = d3.scaleLinear()
+            .domain([0, 2300000])
+            .range([height, 0]);
+
+        var yAxis = d3.axisLeft()
+              .scale(yScale);
+
+        fda.append("g")
+        .attr("class", "axis")
+        .attr("transform", "translate(60,0)").call(yAxis);
+    }
+
+
+  </script>
+<html>

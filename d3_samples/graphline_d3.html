@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <title>My First SVG Path using D3</title>
+    <script src="https://d3js.org/d3.v4.js"></script>
+  </head>
+  <body>
+    <svg width="200" height="200" id="fun-drawing-area" style="background: #EEE">
+    </svg>
+  </body>
+  <script type="text/javascript">  
+    
+    data = [0, 1, 2, 3, 5, 6, 7, 8, 9,10,11,12,13,14,15];
+    //data = d3.range(1,20,1);
+    var generator = d3.line()
+        .x(function(d){
+            return d*10;
+        }).y(function(d){
+            return Math.sin(d)*10+100;
+        });
+        //Interpolation used
+        //.curve(d3.curveBasis);
+
+    var fda = d3.select("#fun-drawing-area");
+    
+    
+    var lineGraph = fda.append("path")
+        .attr("d", generator(data))
+        .attr("stroke", "black")
+        .attr("stroke-width", 2)
+        .attr("fill", "#EEE");
+
+  </script>
+<html>

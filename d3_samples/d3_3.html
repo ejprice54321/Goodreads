@@ -1,0 +1,45 @@
+<html>
+<head>
+    <style>
+        #chart {
+            height:500px;
+            width:500px;
+        }
+        </style>
+</head>
+<body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script src="https://d3js.org/d3.v4.js"></script>
+<svg width="200" height="200" id="chart"></svg>
+<script>
+var barHeights = [45,30,2,50,18];
+var colorValues = [3, 20, 60, 62, 100];
+
+var colorScale = d3.scaleLinear().domain([d3.min(colorValues),d3.max(colorValues)]).range(["#ff0000","blue"]);
+
+d3.select("#chart")
+        .selectAll("rect")
+        .data(barHeights)
+        .enter()
+        .append("rect")
+        //y distance from top
+        .attr("width", "20")
+        .attr("height", function (d) {
+          return d*10;
+         })
+         .attr("x", function(d, i){
+             return i*25+5;
+         })
+         .attr("y", function(d, i){
+             return 500-d*10;
+         })
+        .style("fill", function(d, i){
+            return colorScale(colorValues[i])
+        })
+        .style("stroke", "black")
+        .style("stroke-width", 2);
+</script>
+
+</body>
+</html>

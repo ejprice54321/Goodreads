@@ -1,0 +1,38 @@
+<html>
+<head>
+    <style>
+        #chart {
+            height:500px;
+            width:500px;
+        }
+        </style>
+</head>
+<body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script src="https://d3js.org/d3.v4.js"></script>
+<svg width="200" height="200" id="chart"></svg>
+
+<script>
+d3.select("#chart")
+        //Yes, you're selecting the circles before you create them
+        .selectAll("circle")
+        .data([50, 15, 20, 25])
+        .enter()
+        //Circle is the svg shape you're appending to the chart
+        .append("circle")
+        //y distance from top
+        .attr("cy", "40")
+        //x distance from left
+        .attr("cx", function (d, i) {return i*100;})
+         //Radius
+        .attr("r", function(d){
+                return d
+            })
+        .style("fill", "red")
+        .style("stroke", "black")
+        .style("stroke-width", function(d, i){return i});
+</script>
+
+</body>
+</html>

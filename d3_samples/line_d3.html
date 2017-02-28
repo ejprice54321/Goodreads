@@ -1,0 +1,18 @@
+<html>
+  <head>
+    <title>My First SVG Path using D3</title>
+    <script src="https://d3js.org/d3.v4.js"></script>
+  </head>
+  <body>
+    <svg width="200" height="200" id="fun-drawing-area" style="background: #EEE">
+    </svg>
+  </body>
+  <script type="text/javascript">  
+    var fda = d3.select("#fun-drawing-area");
+    var lineGraph = fda.append("path")
+                       .attr("d", "M 0 200 L 50 100 L 150 100 L 200 0")
+                       .attr("stroke", "black")
+                       .attr("stroke-width", 2)
+                       .attr("fill", "#EEE");
+  </script>
+<html>

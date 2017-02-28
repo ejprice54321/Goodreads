@@ -1,0 +1,63 @@
+<html>
+  <head>
+    <title>My First SVG Path using D3</title>
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+  </head>
+  <body>
+    <svg width="500" height="800" id="fun-drawing-area" style="background: #EEE">
+    </svg>
+  </body>
+  
+  <script type="text/javascript">  
+    
+    $.ajax({
+        url: "http://localhost:5000/winning?limit=40", 
+        success: function(result){
+                draw($.parseJSON(result));
+        }
+    });
+
+    function draw(data) {
+        console.log(data);
+        var leftMargin = 50;
+        var topMargin = 50;
+        var bottomMargin = 50;
+
+        var height = 800;
+
+        var generator = d3.line()
+            .x(function(d){
+                return d["position"]*10+leftMargin;
+            }).y(function(d){
+                return height - d["score"]/100 + topMargin;
+            })
+            //Interpolation used
+            .curve(d3.curveBasis);
+
+        var fda = d3.select("#fun-drawing-area");
+
+        var lineGraph = fda.append("path")
+            .attr("d", generator(data))
+            .attr("stroke", "black")
+            .attr("stroke-width", 2)
+            .attr("fill", "#EEE");
+
+        
+        //This is similar to the d3.scaleLinear used in the color example
+        var yScale = d3.scaleLinear()
+            .domain([0, 80000])
+            .range([height-topMargin, 0+bottomMargin]);
+
+        var yAxis = d3.axisLeft()
+              .scale(yScale);
+
+        fda.append("g")
+        .attr("class", "axis")
+        .attr("transform", "translate(50,0)").call(yAxis);
+
+    }
+
+
+  </script>
+<html>

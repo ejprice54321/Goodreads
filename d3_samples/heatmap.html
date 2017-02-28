@@ -1,0 +1,79 @@
+<html>
+<head>
+</head>
+<body>
+
+<div id="chart">
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script src="https://d3js.org/d3.v4.js"></script>
+
+<svg width="360" height="360" id="heatmap1"></svg>
+<p>
+<svg width="360" height="360" id="heatmap2"></svg>
+
+<script>
+$.ajax({
+    url: "http://localhost:5000/orders?year=1987", 
+    success: function(result){
+            $("div").html(result);
+            draw($.parseJSON(result)[0], "#heatmap1");
+            draw($.parseJSON(result)[1], "#heatmap2");
+    }
+});
+
+function getMinMax(data) {
+    list = [];
+    $.each(data, function(i, row){
+        $.each(row, function(j, cell){
+            list.push(cell);
+        });
+    });
+    console.log(list);
+    return [d3.min(list), d3.max(list)];
+}
+function draw(data, id) {
+        var colorScale = d3.scaleLinear().domain(getMinMax(data)).range(["darkred","blue"]);
+        console.log(data);
+        var size = 60;
+        
+        
+    var grid = d3.select(id)
+        .append("svg")
+        .attr("width", size*6)
+        .attr("height", size*5)
+        .attr("class", "chart");
+
+        var row = grid.selectAll(".row")
+                  .data(data)
+                .enter().append("svg:g")
+                  .attr("class", "row")
+                  .attr("index", function(d, i){
+                      return i;
+                  });
+
+        var col = row.selectAll(".cell")
+                 .data(function (d) { return d; })
+                .enter().append("svg:rect")
+                 .attr("class", "cell")
+                 .attr("x", function(d, i) { 
+                     return i*size; 
+                })
+                 .attr("y", function(d, i) { 
+                     return d3.select(this.parentNode).attr("index")*size; 
+                    })
+                 .attr("width", size)
+                 .attr("height", size)
+                 
+                 .style("fill", function(d, i){
+                     return colorScale(d);
+                 })
+                 .style("stroke", '#555');
+}
+
+
+</script>
+
+</body>
+</html>

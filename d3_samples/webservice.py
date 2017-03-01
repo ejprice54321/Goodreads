@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import request
 from database import Database
-import json 
+import json
 from statistics import mean
 #pip3 install flask-cors
 from flask_cors import CORS, cross_origin
@@ -11,38 +11,15 @@ CORS(app)
 
 db = Database()
 
-def getOrderGrid():
-    grid = {}
-    for i in range(1,3):
-        grid[i] = {}
-        for col in range(1,7):
-            grid[i][col] = {}
-            for row in range(1,6):
-                grid[i][col][row] = []
-    return grid
-
-@app.route("/orders")
-def orders():
-    #(self, url=None, harDirectory=None, searchString=None, removeParams=False, count=1)
-    year = request.args.get('year')
-    db.cur.execute("SELECT * FROM questions JOIN games ON questions.gameId = games.id WHERE games.date LIKE \"%, {}%\"".format(year))
-    grid = getOrderGrid()
-
-    for row in db.cur:
-        if row['round'] in [1,2]:
-            grid[row['round']][row['col']][row['row']].append(row['pickorder'])
-    
-    matrix = [[[mean(grid[i+1][j+1][k+1]) for k in range(5)] for j in range(6)] for i in range(2)]
-    
-    return json.dumps(matrix)
 
 
-@app.route("/winning")
-def winning():
+
+@app.route("/bookstats")
+def bookstats():
     limit = request.args.get('limit')
     if not limit:
         limit = 10
-    db.cur.execute("SELECT * FROM scores JOIN players ON scores.playerId = players.id ORDER BY scores.final DESC LIMIT "+str(limit))
+    db.cur.execute("SELECT *, COUNT() FROM books JOIN reviews ON reviews.bookId = books.id")
     players = []
     i = 1
     for row in db.cur:
@@ -89,7 +66,7 @@ def money():
 
     return json.dumps(players)
 
-    
+
 
 
 @app.route("/hello")
@@ -100,4 +77,3 @@ def hello():
 
 if __name__ == "__main__":
     app.run()
-

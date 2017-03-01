@@ -1,4 +1,4 @@
-var data = [[5,13], [10,17], [15,4], [2,8]];
+var data = [[5,13,8], [10,17,2], [15,4,7], [2,8,11]];
 
     var margin = {top: 20, right: 15, bottom: 60, left: 60}
       , width = 960 - margin.left - margin.right
@@ -58,4 +58,5 @@ var data = [[5,13], [10,17], [15,4], [2,8]];
       .enter().append("svg:circle")
           .attr("cx", function (d,i) { return x(d[0]); } )
           .attr("cy", function (d) { return y(d[1]); } )
-          .attr("r", 8);
+          .attr("r", function (d) {return d[2]})
+          .style("fill", "red")

@@ -200,20 +200,25 @@ class Goodreads:
         bsObj = BeautifulSoup(r.text, "lxml")
         return (bsObj, url)
 
-
+    def start():
+            url = "https://www.goodreads.com/"
+            goodreads = Goodreads()
+            db = Database()
+            reviewCount = 0
+            linkCount = 0
+            bookCount = 0
+            fullList = []
+            for i in range(1):
+                bsObj = goodreads.crawl(url + "list/show/264.Books_That_Everyone_Should_Read_At_Least_Once?page=" + str(i))
+                linkList = goodreads.getLinks(bsObj[0], fullList)
+            books = {};
+            for i in range(len(linkList[0:5])):
+                bsObj = goodreads.crawl(url + str(linkList[i]))
+                goodreads.getBook(bsObj[0], bsObj[1], db)
 
 if __name__ == "__main__":
-    url = "https://www.goodreads.com/"
-    goodreads = Goodreads()
-    db = Database()
-    reviewCount = 0
-    linkCount = 0
-    bookCount = 0
-    fullList = []
-    for i in range(1):
-        bsObj = goodreads.crawl(url + "list/show/264.Books_That_Everyone_Should_Read_At_Least_Once?page=" + str(i))
-        linkList = goodreads.getLinks(bsObj[0], fullList)
-    books = {};
-    for i in range(len(linkList[0:5])):
-        bsObj = goodreads.crawl(url + str(linkList[i]))
-        goodreads.getBook(bsObj[0], bsObj[1], db)
+    try:
+        start()
+    except:
+        print("FATAL ERROR! RESTARTING")
+        start()
